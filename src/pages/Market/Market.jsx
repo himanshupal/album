@@ -7,7 +7,7 @@ const Market = () => {
 
 	useEffect(() => {
 		const getListedItems = async () => {
-			const list = await minter.fetchItemsListed()
+			const list = await minter.totalSupply()
 			console.log({ list })
 			setListed(list)
 		}

@@ -7,7 +7,7 @@ import {
 	networkTokenName,
 	rpcUrls
 } from '@/constants'
-import minter from '@/deployments/minter'
+import marketplace from '@/deployments/marketplace'
 import { toHex } from '@/utils'
 import { ethers } from 'ethers'
 import { formatEther, parseEther } from 'ethers/lib/utils'
@@ -16,9 +16,9 @@ import { createContext, useContext, useEffect, useState } from 'react'
 
 const chainIdFromLS = window.localStorage.getItem(chainIdLocalStorageKey)
 
-const chainId = toHex(chainIdFromLS || import.meta.env.VITE_CHAIN_ID || ChainId.POLYGON_TESTNET)
+const chainId = toHex(chainIdFromLS || import.meta.env.VITE_CHAIN_ID || ChainId.GOERLI)
 const defaultProvider = new ethers.providers.JsonRpcProvider(rpcUrls[chainId][0])
-const defaultMinter = new ethers.Contract(minter.address[chainId], minter.abi, defaultProvider)
+const defaultContract = new ethers.Contract(marketplace.address[chainId], marketplace.abi, defaultProvider)
 
 const ipfsClient = create({
 	host: 'ipfs.infura.io',
@@ -33,7 +33,7 @@ const ipfsClient = create({
 
 const Web3Context = createContext({
 	provider: defaultProvider,
-	minter: defaultMinter,
+	contract: defaultContract,
 	ipfsClient,
 
 	connect: () => {},
@@ -47,7 +47,7 @@ export const useWeb3 = () => useContext(Web3Context)
 const Web3Provider = ({ children }) => {
 	const [signer, setSigner] = useState(null)
 	const [wallet, setWallet] = useState(null)
-	const [minter, setMinter] = useState(defaultMinter)
+	const [contract, setContract] = useState(defaultContract)
 	const [userAddress, setUserAddress] = useState(null)
 	const [provider, setProvider] = useState(defaultProvider)
 
@@ -56,7 +56,7 @@ const Web3Provider = ({ children }) => {
 	const prepareWallet = async (wallet) => {
 		if (wallet.chainId !== chainId) {
 			try {
-				await lib.request({
+				await window.ethereum.request({
 					method: 'wallet_switchEthereumChain',
 					params: [{ chainId }],
 				})
@@ -101,7 +101,7 @@ const Web3Provider = ({ children }) => {
 		const provider = window.ethereum
 		if (!provider) return window.alert('Please install Metamask to use the app!')
 
-		window.contract = minter
+		window.contract = contract
 		window.parseEther = parseEther
 		window.formatEther = formatEther
 
@@ -123,7 +123,7 @@ const Web3Provider = ({ children }) => {
 	useEffect(() => {
 		if (!!userAddress) {
 			const signer = provider.getSigner(userAddress)
-			setMinter(defaultMinter.connect(signer))
+			setContract(defaultContract.connect(signer))
 			setSigner(signer)
 		}
 	}, [userAddress, provider])
@@ -132,7 +132,7 @@ const Web3Provider = ({ children }) => {
 	useEffect(connect, [])
 
 	return (
-		<Web3Context.Provider value={{ userAddress, wallet, provider, signer, connect, minter, ipfsClient }}>
+		<Web3Context.Provider value={{ userAddress, wallet, provider, signer, connect, contract, ipfsClient }}>
 			{children}
 		</Web3Context.Provider>
 	)

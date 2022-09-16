@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 import c from './style.module.scss'
 
 const Create = () => {
-	const { ipfsClient, minter, userAddress } = useWeb3()
+	const { ipfsClient, contract, userAddress } = useWeb3()
 	const fileUpload = useRef()
 
 	const [name, setName] = useState('')
@@ -26,7 +26,7 @@ const Create = () => {
 			})
 
 			console.debug({ imageUploadResponse })
-			setImage(`${ipfsBaseUrl}/${imageUploadResponse.path}`)
+			setImage(imageUploadResponse.path)
 		} catch (err) {
 			window.alert('Please try again...')
 			console.error('handleUpload:', err)
@@ -35,17 +35,14 @@ const Create = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		if (!image) return window.alert('Upload an image first...')
+		if (!image) return window.alert('Upload the image first...')
 		if (!name || !description || !price) return window.alert('Fill all details...')
 
 		try {
 			const metadataUploadResponse = await ipfsClient.add(JSON.stringify(name, image, description))
 			console.debug({ metadataUploadResponse })
 
-			const listingPrice = await minter.getListingPrice()
-			const { hash } = await minter.createToken(`${ipfsBaseUrl}/${metadataUploadResponse.path}`, price, {
-				value: listingPrice,
-			})
+			const { hash } = await contract.mint(userAddress, price,)
 			window.alert(`Tx ${hash} sent...`)
 		} catch (err) {
 			window.alert('Please try again...')

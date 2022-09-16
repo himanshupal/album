@@ -13,12 +13,14 @@ import View from '@/pages/View'
 const Router = () => {
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/market" element={<Market />} />
-				<Route path="/mint" element={<Mint />} />
-				<Route path="/view" element={<View />} />
-			</Routes>
+			<Header>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/market" element={<Market />} />
+					<Route path="/mint" element={<Mint />} />
+					<Route path="/view" element={<View />} />
+				</Routes>
+			</Header>
 		</BrowserRouter>
 	)
 }
@@ -26,9 +28,7 @@ const Router = () => {
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
 		<Web3Provider>
-			<Header>
-				<Router />
-			</Header>
+			<Router />
 		</Web3Provider>
 	</React.StrictMode>
 )

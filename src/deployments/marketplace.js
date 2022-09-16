@@ -2,11 +2,22 @@ import { ChainId } from '@/constants'
 
 export default {
 	address: {
-		[ChainId.POLYGON_TESTNET]: '0x09D363A1105394C73a2B2B6c1D44122D248DD897',
+		[ChainId.GOERLI]: '0x0740dEF2cd64e4eF03Ac1aF5DF5a832cBD7Fc91C',
 	},
 	abi: [
 		{
-			inputs: [],
+			inputs: [
+				{
+					internalType: 'string',
+					name: 'name_',
+					type: 'string',
+				},
+				{
+					internalType: 'string',
+					name: 'symbol_',
+					type: 'string',
+				},
+			],
 			stateMutability: 'nonpayable',
 			type: 'constructor',
 		},
@@ -65,36 +76,18 @@ export default {
 			inputs: [
 				{
 					indexed: true,
-					internalType: 'uint256',
-					name: 'tokenId',
-					type: 'uint256',
-				},
-				{
-					indexed: false,
 					internalType: 'address',
-					name: 'seller',
+					name: 'previousOwner',
 					type: 'address',
 				},
 				{
-					indexed: false,
+					indexed: true,
 					internalType: 'address',
-					name: 'owner',
+					name: 'newOwner',
 					type: 'address',
-				},
-				{
-					indexed: false,
-					internalType: 'uint256',
-					name: 'price',
-					type: 'uint256',
-				},
-				{
-					indexed: false,
-					internalType: 'bool',
-					name: 'sold',
-					type: 'bool',
 				},
 			],
-			name: 'MarketItemCreated',
+			name: 'OwnershipTransferred',
 			type: 'event',
 		},
 		{
@@ -163,157 +156,13 @@ export default {
 			inputs: [
 				{
 					internalType: 'uint256',
-					name: 'tokenId',
+					name: '_tokenId',
 					type: 'uint256',
 				},
 			],
-			name: 'createMarketSale',
+			name: 'burn',
 			outputs: [],
-			stateMutability: 'payable',
-			type: 'function',
-		},
-		{
-			inputs: [
-				{
-					internalType: 'string',
-					name: 'tokenURI',
-					type: 'string',
-				},
-				{
-					internalType: 'uint256',
-					name: 'price',
-					type: 'uint256',
-				},
-			],
-			name: 'createToken',
-			outputs: [
-				{
-					internalType: 'uint256',
-					name: '',
-					type: 'uint256',
-				},
-			],
-			stateMutability: 'payable',
-			type: 'function',
-		},
-		{
-			inputs: [],
-			name: 'fetchItemsListed',
-			outputs: [
-				{
-					components: [
-						{
-							internalType: 'uint256',
-							name: 'tokenId',
-							type: 'uint256',
-						},
-						{
-							internalType: 'address payable',
-							name: 'seller',
-							type: 'address',
-						},
-						{
-							internalType: 'address payable',
-							name: 'owner',
-							type: 'address',
-						},
-						{
-							internalType: 'uint256',
-							name: 'price',
-							type: 'uint256',
-						},
-						{
-							internalType: 'bool',
-							name: 'sold',
-							type: 'bool',
-						},
-					],
-					internalType: 'struct NFTMarketplace.MarketItem[]',
-					name: '',
-					type: 'tuple[]',
-				},
-			],
-			stateMutability: 'view',
-			type: 'function',
-		},
-		{
-			inputs: [],
-			name: 'fetchMarketItems',
-			outputs: [
-				{
-					components: [
-						{
-							internalType: 'uint256',
-							name: 'tokenId',
-							type: 'uint256',
-						},
-						{
-							internalType: 'address payable',
-							name: 'seller',
-							type: 'address',
-						},
-						{
-							internalType: 'address payable',
-							name: 'owner',
-							type: 'address',
-						},
-						{
-							internalType: 'uint256',
-							name: 'price',
-							type: 'uint256',
-						},
-						{
-							internalType: 'bool',
-							name: 'sold',
-							type: 'bool',
-						},
-					],
-					internalType: 'struct NFTMarketplace.MarketItem[]',
-					name: '',
-					type: 'tuple[]',
-				},
-			],
-			stateMutability: 'view',
-			type: 'function',
-		},
-		{
-			inputs: [],
-			name: 'fetchMyNFTs',
-			outputs: [
-				{
-					components: [
-						{
-							internalType: 'uint256',
-							name: 'tokenId',
-							type: 'uint256',
-						},
-						{
-							internalType: 'address payable',
-							name: 'seller',
-							type: 'address',
-						},
-						{
-							internalType: 'address payable',
-							name: 'owner',
-							type: 'address',
-						},
-						{
-							internalType: 'uint256',
-							name: 'price',
-							type: 'uint256',
-						},
-						{
-							internalType: 'bool',
-							name: 'sold',
-							type: 'bool',
-						},
-					],
-					internalType: 'struct NFTMarketplace.MarketItem[]',
-					name: '',
-					type: 'tuple[]',
-				},
-			],
-			stateMutability: 'view',
+			stateMutability: 'nonpayable',
 			type: 'function',
 		},
 		{
@@ -330,19 +179,6 @@ export default {
 					internalType: 'address',
 					name: '',
 					type: 'address',
-				},
-			],
-			stateMutability: 'view',
-			type: 'function',
-		},
-		{
-			inputs: [],
-			name: 'getListingPrice',
-			outputs: [
-				{
-					internalType: 'uint256',
-					name: '',
-					type: 'uint256',
 				},
 			],
 			stateMutability: 'view',
@@ -373,6 +209,24 @@ export default {
 			type: 'function',
 		},
 		{
+			inputs: [
+				{
+					internalType: 'address',
+					name: '_to',
+					type: 'address',
+				},
+				{
+					internalType: 'string',
+					name: '_ipfsHash',
+					type: 'string',
+				},
+			],
+			name: 'mint',
+			outputs: [],
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+		{
 			inputs: [],
 			name: 'name',
 			outputs: [
@@ -380,6 +234,19 @@ export default {
 					internalType: 'string',
 					name: '',
 					type: 'string',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [],
+			name: 'owner',
+			outputs: [
+				{
+					internalType: 'address',
+					name: '',
+					type: 'address',
 				},
 			],
 			stateMutability: 'view',
@@ -405,21 +272,10 @@ export default {
 			type: 'function',
 		},
 		{
-			inputs: [
-				{
-					internalType: 'uint256',
-					name: 'tokenId',
-					type: 'uint256',
-				},
-				{
-					internalType: 'uint256',
-					name: 'price',
-					type: 'uint256',
-				},
-			],
-			name: 'resellToken',
+			inputs: [],
+			name: 'renounceOwnership',
 			outputs: [],
-			stateMutability: 'payable',
+			stateMutability: 'nonpayable',
 			type: 'function',
 		},
 		{
@@ -527,7 +383,69 @@ export default {
 			inputs: [
 				{
 					internalType: 'uint256',
-					name: 'tokenId',
+					name: 'index',
+					type: 'uint256',
+				},
+			],
+			name: 'tokenByIndex',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'string',
+					name: '_tokenHash',
+					type: 'string',
+				},
+			],
+			name: 'tokenId',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'address',
+					name: 'owner',
+					type: 'address',
+				},
+				{
+					internalType: 'uint256',
+					name: 'index',
+					type: 'uint256',
+				},
+			],
+			name: 'tokenOfOwnerByIndex',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'uint256',
+					name: '_tokenId',
 					type: 'uint256',
 				},
 			],
@@ -537,6 +455,19 @@ export default {
 					internalType: 'string',
 					name: '',
 					type: 'string',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [],
+			name: 'totalSupply',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
 				},
 			],
 			stateMutability: 'view',
@@ -568,14 +499,33 @@ export default {
 		{
 			inputs: [
 				{
-					internalType: 'uint256',
-					name: '_listingPrice',
-					type: 'uint256',
+					internalType: 'address',
+					name: 'newOwner',
+					type: 'address',
 				},
 			],
-			name: 'updateListingPrice',
+			name: 'transferOwnership',
 			outputs: [],
-			stateMutability: 'payable',
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'address',
+					name: '_user',
+					type: 'address',
+				},
+			],
+			name: 'userTokens',
+			outputs: [
+				{
+					internalType: 'uint256[]',
+					name: '',
+					type: 'uint256[]',
+				},
+			],
+			stateMutability: 'view',
 			type: 'function',
 		},
 	],
