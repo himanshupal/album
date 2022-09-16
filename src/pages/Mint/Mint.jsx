@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 import c from './style.module.scss'
 import {Form,Input,Button} from "antd";
 import "antd/dist/antd.css";
-
+const { TextArea } = Input;
 const Create = () => {
 	const { ipfsClient, contract, userAddress } = useWeb3()
 	const fileUpload = useRef()
@@ -56,29 +56,27 @@ const Create = () => {
 		<div className={c.wrapper} onSubmit={handleSubmit}>
 			<Form>
 				<Form.Item>
-					<img src="" />
-
-					<Input type="file" ref={fileUpload} onChange={handleUpload} accept="image/*" hidden />
-					<Button type="button" onClick={() => fileUpload.current?.click()}>
-						Upload
-					</Button>
-				</Form.Item>
-
-				<Form.Item>
 					<label htmlFor="">Title</label>
 					<Input required value={name} onChange={({ target }) => setName(target.value)} />
 				</Form.Item>
 
 				<Form.Item>
 					<label htmlFor="">Description</label>
-					<Input required value={description} onChange={({ target }) => setDescription(target.value)} />
+					<TextArea rows={4} placeholder="maxLength is 6" maxLength={6} required value={description} onChange={({ target }) => setDescription(target.value)} />
 				</Form.Item>
 
 				<Form.Item>
 					<label htmlFor="">Price</label>
-					<Input required value={price} onChange={({ target }) => setPrice(target.value)} />
+					<Input placeholder="0.0000 eth" required value={price} onChange={({ target }) => setPrice(target.value)} />
 				</Form.Item>
+				<Form.Item>
+					<img src="" />
 
+					<Input type="file" ref={fileUpload} onChange={handleUpload} accept="image/*" hidden />
+					<Button type="button" onClick={() => fileUpload.current?.click()}>
+						Select Image
+					</Button>
+				</Form.Item>
 				<Button type="submit">Mint</Button>
 			</Form>
 		</div>
