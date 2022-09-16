@@ -2,6 +2,8 @@ import { ipfsBaseUrl } from '@/constants'
 import { useWeb3 } from '@/context/web3'
 import { useRef, useState } from 'react'
 import c from './style.module.scss'
+import {Form,Input,Button} from "antd";
+import "antd/dist/antd.css";
 
 const Create = () => {
 	const { ipfsClient, contract, userAddress } = useWeb3()
@@ -52,33 +54,33 @@ const Create = () => {
 
 	return (
 		<div className={c.wrapper} onSubmit={handleSubmit}>
-			<form>
-				<div className="">
+			<Form>
+				<Form.Item>
 					<img src="" />
 
-					<input type="file" ref={fileUpload} onChange={handleUpload} accept="image/*" hidden />
-					<button type="button" onClick={() => fileUpload.current?.click()}>
+					<Input type="file" ref={fileUpload} onChange={handleUpload} accept="image/*" hidden />
+					<Button type="button" onClick={() => fileUpload.current?.click()}>
 						Upload
-					</button>
-				</div>
+					</Button>
+				</Form.Item>
 
-				<div className="">
+				<Form.Item>
 					<label htmlFor="">Title</label>
-					<input required value={name} onChange={({ target }) => setName(target.value)} />
-				</div>
+					<Input required value={name} onChange={({ target }) => setName(target.value)} />
+				</Form.Item>
 
-				<div className="">
-					<label htmlFor="">A little information about it</label>
-					<input required value={description} onChange={({ target }) => setDescription(target.value)} />
-				</div>
+				<Form.Item>
+					<label htmlFor="">Description</label>
+					<Input required value={description} onChange={({ target }) => setDescription(target.value)} />
+				</Form.Item>
 
-				<div className="">
+				<Form.Item>
 					<label htmlFor="">Price</label>
-					<input required value={price} onChange={({ target }) => setPrice(target.value)} />
-				</div>
+					<Input required value={price} onChange={({ target }) => setPrice(target.value)} />
+				</Form.Item>
 
-				<button type="submit">Mint</button>
-			</form>
+				<Button type="submit">Mint</Button>
+			</Form>
 		</div>
 	)
 }
