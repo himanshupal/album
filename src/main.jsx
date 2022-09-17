@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import Home from '@/pages/Home'
 import Market from '@/pages/Market'
+import Dashboard from '@/pages/Dashboard'
 import Mint from '@/pages/Mint'
 import View from '@/pages/View'
 
@@ -17,6 +18,7 @@ const Router = () => {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/market" element={<Market />} />
+					<Route path="/dashboard" element={<Dashboard />} />
 					<Route path="/mint" element={<Mint />} />
 					<Route path="/view" element={<View />} />
 				</Routes>

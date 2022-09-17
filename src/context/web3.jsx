@@ -101,7 +101,6 @@ const Web3Provider = ({ children }) => {
 		const provider = window.ethereum
 		if (!provider) return window.alert('Please install Metamask to use the app!')
 
-		window.contract = contract
 		window.parseEther = parseEther
 		window.formatEther = formatEther
 
@@ -122,6 +121,7 @@ const Web3Provider = ({ children }) => {
 		if (!!userAddress) {
 			const signer = provider.getSigner(userAddress)
 			setContract(defaultContract.connect(signer))
+			window.contract = contract.connect(signer)
 			setSigner(signer)
 		}
 	}, [userAddress, provider])

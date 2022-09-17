@@ -1,7 +1,6 @@
-import { Breadcrumb, Layout, Menu } from 'antd'
-const { Header, Content, Footer } = Layout
-import { Link, useNavigate } from 'react-router-dom'
-import styles from './styles.module.scss'
+import { Layout, Menu } from 'antd'
+const { Header, Content } = Layout
+import { useNavigate } from 'react-router-dom'
 
 const links = [
 	{
@@ -15,6 +14,10 @@ const links = [
 	{
 		label: 'Market',
 		key: '/market',
+	},
+	{
+		label: 'Dashboard',
+		key: '/dashboard',
 	},
 ]
 
@@ -56,25 +59,6 @@ const CustomLayout = ({ children }) => {
 					{children}
 				</div>
 			</Content>
-
-			{/* <div className={styles.wrapper}>
-			<nav className={styles.navbar}>
-				<div className={styles.navGroup}>
-					<Link to="/" className={styles.navLink}>
-						Home
-					</Link>
-					<Link to="/market" className={styles.navLink}>
-						Market
-					</Link>
-				</div>
-				<div className={styles.navGroup}>
-					<Link to="/mint" className={styles.navLink}>
-						Mint New
-					</Link>
-				</div>
-			</nav>
-			<div className={styles.childrenWrapper}>{children}</div>
-		</div> */}
 		</Layout>
 	)
 }

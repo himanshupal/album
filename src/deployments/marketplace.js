@@ -4,6 +4,7 @@ export default {
 	address: {
 		[ChainId.POLYGON_TESTNET]: '0x66093B6eB78b2FeC5EFF1C5e2bE551c33124B65f',
 		[ChainId.GOERLI]: '0x86352552699506762B618CfAd89E2748be488468',
+		[ChainId.LOCALHOST]: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
 	},
 	abi: [
 		{
@@ -403,6 +404,25 @@ export default {
 					type: 'uint256',
 				},
 			],
+			name: 'priceOfToken',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+			],
 			name: 'purchase',
 			outputs: [],
 			stateMutability: 'payable',
@@ -700,6 +720,25 @@ export default {
 			name: 'transferOwnership',
 			outputs: [],
 			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'address',
+					name: 'seller',
+					type: 'address',
+				},
+			],
+			name: 'userEarning',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
+				},
+			],
+			stateMutability: 'view',
 			type: 'function',
 		},
 		{
