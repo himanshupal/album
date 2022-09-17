@@ -9,8 +9,12 @@ export const ChainId = {
 }
 
 export const rpcUrls = {
-	[ChainId.POLYGON_TESTNET]: ['https://rpc-mumbai.maticvigil.com'],
-	[ChainId.GOERLI]: [`https://eth-goerli.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY}`],
+	[ChainId.POLYGON_TESTNET]: [`https://rpc.ankr.com/polygon_mumbai`, `https://rpc-mumbai.maticvigil.com`],
+	[ChainId.GOERLI]: [
+		`https://eth-goerli.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY}`,
+		`https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`,
+		`https://rpc.ankr.com/eth_goerli`,
+	],
 }
 
 export const blockExplorerUrls = {

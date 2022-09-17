@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
-import Header from '@/components/Header'
+import Layout from '@/components/Layout'
 import Home from '@/pages/Home'
 import Market from '@/pages/Market'
 import Mint from '@/pages/Mint'
@@ -13,14 +13,14 @@ import View from '@/pages/View'
 const Router = () => {
 	return (
 		<BrowserRouter>
-			<Header>
+			<Layout>
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/market" element={<Market />} />
 					<Route path="/mint" element={<Mint />} />
 					<Route path="/view" element={<View />} />
 				</Routes>
-			</Header>
+			</Layout>
 		</BrowserRouter>
 	)
 }

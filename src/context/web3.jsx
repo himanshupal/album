@@ -5,7 +5,7 @@ import {
 	networkName,
 	networkToken,
 	networkTokenName,
-	rpcUrls
+	rpcUrls,
 } from '@/constants'
 import marketplace from '@/deployments/marketplace'
 import { toHex } from '@/utils'
@@ -84,17 +84,17 @@ const Web3Provider = ({ children }) => {
 					console.error('Error switching chains:', err.message)
 				}
 			}
-
-			const [account] = await window.ethereum.request({
-				method: 'eth_requestAccounts',
-			})
-
-			const currentAddress = window.ethereum.selectedAddress || account
-
-			setWallet(wallet)
-			setUserAddress(currentAddress)
-			setProvider(new ethers.providers.Web3Provider(wallet))
 		}
+
+		const [account] = await window.ethereum.request({
+			method: 'eth_requestAccounts',
+		})
+
+		const currentAddress = window.ethereum.selectedAddress || account
+
+		setWallet(wallet)
+		setUserAddress(currentAddress)
+		setProvider(new ethers.providers.Web3Provider(wallet))
 	}
 
 	const connect = () => {
@@ -105,19 +105,17 @@ const Web3Provider = ({ children }) => {
 		window.parseEther = parseEther
 		window.formatEther = formatEther
 
-		if (provider) {
-			prepareWallet(provider)
+		prepareWallet(provider)
 
-			const callBack = () => {
-				window.ethereum.removeAllListeners('chainChanged')
-				window.ethereum.removeAllListeners('accountsChanged')
-			}
-
-			window.ethereum.on('chainChanged', () => window.location.reload())
-			window.ethereum.on('accountsChanged', handleAccountChange)
-
-			return callBack
+		const callBack = () => {
+			window.ethereum.removeAllListeners('chainChanged')
+			window.ethereum.removeAllListeners('accountsChanged')
 		}
+
+		window.ethereum.on('chainChanged', () => window.location.reload())
+		window.ethereum.on('accountsChanged', handleAccountChange)
+
+		return callBack
 	}
 
 	useEffect(() => {
@@ -129,7 +127,7 @@ const Web3Provider = ({ children }) => {
 	}, [userAddress, provider])
 
 	// Comment this line to disable automatic popup
-	useEffect(connect, [])
+	useEffect(() => connect(), [])
 
 	return (
 		<Web3Context.Provider value={{ userAddress, wallet, provider, signer, connect, contract, ipfsClient }}>

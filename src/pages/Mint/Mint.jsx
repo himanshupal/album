@@ -2,49 +2,45 @@ import { ipfsBaseUrl } from '@/constants'
 import { useWeb3 } from '@/context/web3'
 import { useRef, useState } from 'react'
 import c from './style.module.scss'
-import {Form,Input,Button} from "antd";
-import "antd/dist/antd.css";
+import { Form, Input, Button, Space, Progress } from 'antd'
+
+import 'antd/dist/antd.css'
+import { parseEther } from 'ethers/lib/utils'
 
 const Create = () => {
 	const { ipfsClient, contract, userAddress } = useWeb3()
 	const fileUpload = useRef()
 
-	const [name, setName] = useState('')
 	const [image, setImage] = useState('')
-	const [price, setPrice] = useState('')
-	const [description, setDescription] = useState('')
-
 	const [uploadProgress, setUploadProgress] = useState(0)
 
 	const handleUpload = async (e) => {
-		if (!userAddress) return window.alert('Please connect wallet first...')
-
 		try {
 			const file = e.target.files?.length ? e.target.files[0] : null
 			if (!file) return
-
-			const imageUploadResponse = await ipfsClient.add(file, {
-				progress: (p) => setUploadProgress((p / file.size) * 100),
-			})
-
-			console.debug({ imageUploadResponse })
-			setImage(imageUploadResponse.path)
+			setImage(file)
 		} catch (err) {
-			window.alert('Please try again...')
 			console.error('handleUpload:', err)
 		}
 	}
 
-	const handleSubmit = async (e) => {
-		e.preventDefault()
-		if (!image) return window.alert('Upload the image first...')
-		if (!name || !description || !price) return window.alert('Fill all details...')
+	const handleSubmit = async ({ title, price, description }) => {
+		if (!image) return window.alert('Choose an image first')
+		if (!userAddress) return window.alert('Please connect your wallet')
+
+		const imageUploadResponse = await ipfsClient.add(image, {
+			progress: (p) => setUploadProgress((p / image.size) * 100),
+		})
+
+		console.debug({ imageUploadResponse })
 
 		try {
-			const metadataUploadResponse = await ipfsClient.add(JSON.stringify(name, image, description))
+			const metadataUploadResponse = await ipfsClient.add(
+				JSON.stringify({ title, path: imageUploadResponse.path, description })
+			)
 			console.debug({ metadataUploadResponse })
 
-			const { hash } = await contract.mint(userAddress, price,)
+			const { hash } = await contract.mint(userAddress, metadataUploadResponse.path, parseEther(price))
 			window.alert(`Tx ${hash} sent...`)
 		} catch (err) {
 			window.alert('Please try again...')
@@ -53,33 +49,48 @@ const Create = () => {
 	}
 
 	return (
-		<div className={c.wrapper} onSubmit={handleSubmit}>
-			<Form>
-				<Form.Item>
-					<img src="" />
+		<div className={c.wrapper}>
+			<Form onFinish={handleSubmit} layout="vertical">
+				<input type="file" ref={fileUpload} onChange={handleUpload} accept="image/*" hidden />
 
-					<Input type="file" ref={fileUpload} onChange={handleUpload} accept="image/*" hidden />
-					<Button type="button" onClick={() => fileUpload.current?.click()}>
+				{image && (
+					<Form.Item style={{ flexDirection: 'column' }}>
+						<img className={c.imagePreview} src={URL.createObjectURL(image)} />
+					</Form.Item>
+				)}
+
+				<Form.Item>
+					<Button htmlType="button" onClick={() => fileUpload.current?.click()}>
 						Upload
 					</Button>
 				</Form.Item>
 
-				<Form.Item>
-					<label htmlFor="">Title</label>
-					<Input required value={name} onChange={({ target }) => setName(target.value)} />
+				<Form.Item label="Title" name="title" required rules={[{ required: true, message: 'Please provide a title!' }]}>
+					<Input />
 				</Form.Item>
 
-				<Form.Item>
-					<label htmlFor="">Description</label>
-					<Input required value={description} onChange={({ target }) => setDescription(target.value)} />
+				<Form.Item
+					label="Description"
+					name="description"
+					required
+					rules={[{ required: true, message: 'Please provide image description!' }]}
+				>
+					<Input />
 				</Form.Item>
 
-				<Form.Item>
-					<label htmlFor="">Price</label>
-					<Input required value={price} onChange={({ target }) => setPrice(target.value)} />
+				<Form.Item
+					label="Price"
+					name="price"
+					required
+					rules={[{ required: true, message: 'Please input token price in ETH' }]}
+				>
+					<Input type="number" />
 				</Form.Item>
 
-				<Button type="submit">Mint</Button>
+				<Space>
+					<Button htmlType="submit">Mint</Button>
+					{uploadProgress && <Progress percent={uploadProgress} />}
+				</Space>
 			</Form>
 		</div>
 	)

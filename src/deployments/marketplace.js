@@ -2,19 +2,25 @@ import { ChainId } from '@/constants'
 
 export default {
 	address: {
-		[ChainId.GOERLI]: '0x0740dEF2cd64e4eF03Ac1aF5DF5a832cBD7Fc91C',
+		[ChainId.POLYGON_TESTNET]: '0x66093B6eB78b2FeC5EFF1C5e2bE551c33124B65f',
+		[ChainId.GOERLI]: '0x86352552699506762B618CfAd89E2748be488468',
 	},
 	abi: [
 		{
 			inputs: [
 				{
 					internalType: 'string',
-					name: 'name_',
+					name: 'name',
 					type: 'string',
 				},
 				{
 					internalType: 'string',
-					name: 'symbol_',
+					name: 'symbol',
+					type: 'string',
+				},
+				{
+					internalType: 'string',
+					name: 'baseURI_',
 					type: 'string',
 				},
 			],
@@ -95,6 +101,81 @@ export default {
 			inputs: [
 				{
 					indexed: true,
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+				{
+					indexed: false,
+					internalType: 'uint256',
+					name: 'oldPrice',
+					type: 'uint256',
+				},
+				{
+					indexed: false,
+					internalType: 'uint256',
+					name: 'newPrice',
+					type: 'uint256',
+				},
+			],
+			name: 'PriceUpdate',
+			type: 'event',
+		},
+		{
+			anonymous: false,
+			inputs: [
+				{
+					indexed: true,
+					internalType: 'address',
+					name: 'previousOwner',
+					type: 'address',
+				},
+				{
+					indexed: true,
+					internalType: 'address',
+					name: 'newOwner',
+					type: 'address',
+				},
+				{
+					indexed: false,
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+				{
+					indexed: false,
+					internalType: 'uint256',
+					name: 'amount',
+					type: 'uint256',
+				},
+			],
+			name: 'Purchase',
+			type: 'event',
+		},
+		{
+			anonymous: false,
+			inputs: [
+				{
+					indexed: true,
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+				{
+					indexed: false,
+					internalType: 'bool',
+					name: 'status',
+					type: 'bool',
+				},
+			],
+			name: 'StatusUpdate',
+			type: 'event',
+		},
+		{
+			anonymous: false,
+			inputs: [
+				{
+					indexed: true,
 					internalType: 'address',
 					name: 'from',
 					type: 'address',
@@ -113,6 +194,25 @@ export default {
 				},
 			],
 			name: 'Transfer',
+			type: 'event',
+		},
+		{
+			anonymous: false,
+			inputs: [
+				{
+					indexed: true,
+					internalType: 'address',
+					name: 'receiver',
+					type: 'address',
+				},
+				{
+					indexed: false,
+					internalType: 'uint256',
+					name: 'amount',
+					type: 'uint256',
+				},
+			],
+			name: 'Withdraw',
 			type: 'event',
 		},
 		{
@@ -156,7 +256,7 @@ export default {
 			inputs: [
 				{
 					internalType: 'uint256',
-					name: '_tokenId',
+					name: 'tokenId',
 					type: 'uint256',
 				},
 			],
@@ -211,14 +311,38 @@ export default {
 		{
 			inputs: [
 				{
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+			],
+			name: 'isTokenOnSale',
+			outputs: [
+				{
+					internalType: 'bool',
+					name: 'status',
+					type: 'bool',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
 					internalType: 'address',
-					name: '_to',
+					name: 'to',
 					type: 'address',
 				},
 				{
 					internalType: 'string',
-					name: '_ipfsHash',
+					name: 'tokenURI_',
 					type: 'string',
+				},
+				{
+					internalType: 'uint256',
+					name: 'tokenPrice_',
+					type: 'uint256',
 				},
 			],
 			name: 'mint',
@@ -269,6 +393,19 @@ export default {
 				},
 			],
 			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+			],
+			name: 'purchase',
+			outputs: [],
+			stateMutability: 'payable',
 			type: 'function',
 		},
 		{
@@ -330,6 +467,19 @@ export default {
 			type: 'function',
 		},
 		{
+			inputs: [],
+			name: 'saleFees',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
 			inputs: [
 				{
 					internalType: 'address',
@@ -343,6 +493,55 @@ export default {
 				},
 			],
 			name: 'setApprovalForAll',
+			outputs: [],
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'uint256',
+					name: 'newSaleFees',
+					type: 'uint256',
+				},
+			],
+			name: 'setSaleFees',
+			outputs: [],
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+				{
+					internalType: 'uint256',
+					name: 'newPrice',
+					type: 'uint256',
+				},
+			],
+			name: 'setTokenPrice',
+			outputs: [],
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'uint256',
+					name: 'tokenId',
+					type: 'uint256',
+				},
+				{
+					internalType: 'bool',
+					name: 'status',
+					type: 'bool',
+				},
+			],
+			name: 'setTokenSaleStatus',
 			outputs: [],
 			stateMutability: 'nonpayable',
 			type: 'function',
@@ -401,25 +600,6 @@ export default {
 		{
 			inputs: [
 				{
-					internalType: 'string',
-					name: '_tokenHash',
-					type: 'string',
-				},
-			],
-			name: 'tokenId',
-			outputs: [
-				{
-					internalType: 'uint256',
-					name: '',
-					type: 'uint256',
-				},
-			],
-			stateMutability: 'view',
-			type: 'function',
-		},
-		{
-			inputs: [
-				{
 					internalType: 'address',
 					name: 'owner',
 					type: 'address',
@@ -445,7 +625,7 @@ export default {
 			inputs: [
 				{
 					internalType: 'uint256',
-					name: '_tokenId',
+					name: 'tokenId',
 					type: 'uint256',
 				},
 			],
@@ -455,6 +635,19 @@ export default {
 					internalType: 'string',
 					name: '',
 					type: 'string',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [],
+			name: 'tokensMinted',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
 				},
 			],
 			stateMutability: 'view',
@@ -510,22 +703,17 @@ export default {
 			type: 'function',
 		},
 		{
-			inputs: [
-				{
-					internalType: 'address',
-					name: '_user',
-					type: 'address',
-				},
-			],
-			name: 'userTokens',
-			outputs: [
-				{
-					internalType: 'uint256[]',
-					name: '',
-					type: 'uint256[]',
-				},
-			],
-			stateMutability: 'view',
+			inputs: [],
+			name: 'withdraw',
+			outputs: [],
+			stateMutability: 'nonpayable',
+			type: 'function',
+		},
+		{
+			inputs: [],
+			name: 'withdrawExcessFunds',
+			outputs: [],
+			stateMutability: 'nonpayable',
 			type: 'function',
 		},
 	],
