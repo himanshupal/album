@@ -53,7 +53,7 @@ const Market = () => {
 		<div className="">
 			{tokenListBrokenToFour.map((tokenList, index) => (
 				<Row key={index}>
-					{tokenList.map(({ tokenId, title, url: image, thumbnailUrl: description, price }, id) => (
+					{tokenList.map(({ tokenId, title, image, description, price }, id) => (
 						<Col style={{ padding: 8 }} key={String(id) + index}>
 							<CustomCard
 								title={title}

@@ -68,7 +68,7 @@ const Dashboard = () => {
 
 			{tokenListBrokenToFour.map((tokenList, index) => (
 				<Row key={index}>
-					{tokenList.map(({ tokenId, title, url: image, thumbnailUrl: description, price }, id) => (
+					{tokenList.map(({ tokenId, title, image, description, price }, id) => (
 						<Col style={{ padding: 8 }}>
 							<CustomCard
 								title={title}
