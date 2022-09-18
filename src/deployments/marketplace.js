@@ -4,7 +4,7 @@ export default {
 	address: {
 		[ChainId.POLYGON_TESTNET]: '0x66093B6eB78b2FeC5EFF1C5e2bE551c33124B65f',
 		[ChainId.GOERLI]: '0x86352552699506762B618CfAd89E2748be488468',
-		[ChainId.LOCALHOST]: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
+		[ChainId.LOCALHOST]: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
 	},
 	abi: [
 		{
@@ -731,6 +731,25 @@ export default {
 				},
 			],
 			name: 'userEarning',
+			outputs: [
+				{
+					internalType: 'uint256',
+					name: '',
+					type: 'uint256',
+				},
+			],
+			stateMutability: 'view',
+			type: 'function',
+		},
+		{
+			inputs: [
+				{
+					internalType: 'address',
+					name: 'user',
+					type: 'address',
+				},
+			],
+			name: 'userTokenCount',
 			outputs: [
 				{
 					internalType: 'uint256',

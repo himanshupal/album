@@ -7,23 +7,27 @@ import CustomCard from '@/components/Card/Card'
 const Dashboard = () => {
 	const { contract, userAddress } = useWeb3()
 	const [tokens, setTokens] = useState([])
-	const [totalSupply, setTotalSupply] = useState('0')
 	const [userEarning, setUserEarning] = useState('-.--')
+	const [userTokensCount, setUserTokensCount] = useState('0')
 
 	useEffect(() => {
 		const getSalesValue = async () => {
-			const userEarning = await contract.userEarning(userAddress)
-			setUserEarning(formatEther(userEarning))
-			const totalSupply = await contract.totalSupply()
-			setTotalSupply(String(totalSupply))
+			try {
+				const userEarning = await contract.userEarning(userAddress)
+				setUserEarning(formatEther(userEarning))
+				const userTokensCount = await contract.userTokenCount(userAddress)
+				setUserTokensCount(String(userTokensCount))
+			} catch (err) {
+				console.error(`getSalesValue:`, err)
+			}
 		}
-		getSalesValue()
-	}, [])
+		if (userAddress) getSalesValue()
+	}, [userAddress])
 
 	useEffect(() => {
 		const fetchUserTokens = async () => {
 			const tokenIds = await Promise.all(
-				new Array(+totalSupply).fill(null).map(async (_, index) => {
+				new Array(+userTokensCount).fill(null).map(async (_, index) => {
 					try {
 						return await contract.tokenOfOwnerByIndex(userAddress, index)
 					} catch (err) {
@@ -37,8 +41,10 @@ const Dashboard = () => {
 					.map(async (tokenId) => {
 						try {
 							const tokenURI = await contract.tokenURI(tokenId)
+							const tokenPrice = await contract.priceOfToken(tokenId)
+							const isOnSale = await contract.isTokenOnSale(tokenId)
 							const tokenData = await fetch(tokenURI)
-							return tokenData.json()
+							return { tokenId, price: tokenPrice, isOnSale, ...(await tokenData.json()) }
 						} catch (err) {
 							console.error('fetchUserTokens:2', err)
 						}
@@ -46,8 +52,8 @@ const Dashboard = () => {
 			)
 			setTokens(tokens)
 		}
-		if (+totalSupply) fetchUserTokens()
-	}, [totalSupply])
+		if (+userTokensCount) fetchUserTokens()
+	}, [userTokensCount])
 
 	const tokenListBrokenToFour = useMemo(
 		() =>
@@ -61,15 +67,19 @@ const Dashboard = () => {
 	)
 
 	return (
-		<Space direction="verical">
-			<Typography.Title>Your lifetime sales = {userEarning} ETH</Typography.Title>
+		<Space direction="vertical" style={{ width: '100%' }}>
+			<Typography.Title style={{ textAlign: 'center', margin: 'unset' }}>
+				Your lifetime sale is <span style={{ color: 'blue' }}>{userEarning}</span> ETH
+			</Typography.Title>
 
 			<Divider />
 
+			<Typography.Title style={{ textAlign: 'center', margin: 'unset' }}>Your Tokens</Typography.Title>
+
 			{tokenListBrokenToFour.map((tokenList, index) => (
-				<Row key={index}>
-					{tokenList.map(({ tokenId, title, image, description, price }, id) => (
-						<Col style={{ padding: 8 }}>
+				<Row key={index} justify="space-evenly">
+					{tokenList.map(({ tokenId, title, image, description, price, isOnSale }, id) => (
+						<Col key={id} style={{ padding: 8 }}>
 							<CustomCard
 								title={title}
 								image={image}
@@ -77,6 +87,8 @@ const Dashboard = () => {
 								tokenId={tokenId}
 								description={description}
 								key={String(id) + index}
+								isOnSale={isOnSale}
+								purchaseDisabled
 							/>
 						</Col>
 					))}

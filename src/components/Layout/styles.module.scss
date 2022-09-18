@@ -3,6 +3,15 @@
 	min-height: 100vh;
 }
 
+.header {
+	z-index: 1;
+	width: 100%;
+	display: flex;
+	position: fixed;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .navbar {
 	position: fixed;
 	left: 0;

@@ -25,8 +25,9 @@ const Market = () => {
 						const tokenId = await contract.tokenByIndex(index)
 						const tokenUrl = await contract.tokenURI(tokenId)
 						const tokenPrice = await contract.priceOfToken(tokenId)
+						const isOnSale = await contract.isTokenOnSale(tokenId)
 						const tokenData = await fetch(tokenUrl)
-						return { tokenId, price: tokenPrice, ...(await tokenData.json()) }
+						return { tokenId, price: tokenPrice, isOnSale, ...(await tokenData.json()) }
 					} catch (err) {
 						console.error('getTokenDetails: index', index, err)
 					}
@@ -41,7 +42,7 @@ const Market = () => {
 	const tokenListBrokenToFour = useMemo(
 		() =>
 			tokenList
-				.filter((x) => x)
+				.filter((x) => x && x.isOnSale)
 				.reduce(
 					(p, c, x = p.length) => (x && p[p.length - 1].length !== 4 ? (p[p.length - 1].push(c), p) : (p.push([c]), p)),
 					[]
