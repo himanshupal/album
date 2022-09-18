@@ -1,4 +1,3 @@
-import { ipfsBaseUrl } from '@/constants'
 import { useWeb3 } from '@/context/web3'
 import { useRef, useState } from 'react'
 import c from './style.module.scss'
@@ -36,7 +35,7 @@ const Create = () => {
 
 		try {
 			const metadataUploadResponse = await ipfsClient.add(
-				JSON.stringify({ title, path: imageUploadResponse.path, description })
+				JSON.stringify({ title, image: imageUploadResponse.path, description })
 			)
 			console.debug({ metadataUploadResponse })
 
