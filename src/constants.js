@@ -1,7 +1,7 @@
 import { toHex } from '@/utils'
 
 export const chainIdLocalStorageKey = 'chain_id'
-export const ipfsBaseUrl = 'https://ipfs.infura.io/ipfs'
+export const ipfsBaseUrl = 'https://ipfs.io/ipfs'
 
 export const ChainId = {
 	POLYGON_TESTNET: toHex(80001),

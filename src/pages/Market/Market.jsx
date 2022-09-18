@@ -1,5 +1,6 @@
 import CustomCard from '@/components/Card/Card'
 import { useEffect, useState } from 'react'
+import { ipfsBaseUrl } from '@/constants'
 import { useWeb3 } from '@/context/web3'
 import { useMemo } from 'react'
 import { Row, Col } from 'antd'
@@ -58,11 +59,11 @@ const Market = () => {
 						<Col style={{ padding: 8 }} key={String(id) + index}>
 							<CustomCard
 								title={title}
-								image={image}
 								price={price}
 								tokenId={tokenId}
-								description={description}
 								key={String(id) + index}
+								description={description}
+								image={`${ipfsBaseUrl}/${image}`}
 							/>
 						</Col>
 					))}

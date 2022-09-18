@@ -3,6 +3,7 @@ import { Space, Typography, Divider, Row, Col } from 'antd'
 import { formatEther } from 'ethers/lib/utils'
 import { useEffect, useMemo, useState } from 'react'
 import CustomCard from '@/components/Card/Card'
+import { ipfsBaseUrl } from '@/constants'
 
 const Dashboard = () => {
 	const { contract, userAddress } = useWeb3()
@@ -82,9 +83,9 @@ const Dashboard = () => {
 						<Col key={id} style={{ padding: 8 }}>
 							<CustomCard
 								title={title}
-								image={image}
 								price={price}
 								tokenId={tokenId}
+								image={`${ipfsBaseUrl}/${image}`}
 								description={description}
 								key={String(id) + index}
 								isOnSale={isOnSale}
